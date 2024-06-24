@@ -102,18 +102,9 @@ def get_birthday(birthday, year, today):
     return birth_day
  
 
-def get_ciba():
-    url = "http://open.iciba.com/dsapi/"
-    headers = {
-        'Content-Type': 'application/json',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
-                      'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36'
-    }
-    r = get(url, headers=headers)
-
  
  
-def send_message(to_user, access_token, region_name, weather, temp, wind_dir):
+def send_message(to_user, access_token, region_name, weather, temp,wind_dir ):
     url = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token={}".format(access_token)
     week_list = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"]
     year = localtime().tm_year
@@ -121,13 +112,6 @@ def send_message(to_user, access_token, region_name, weather, temp, wind_dir):
     day = localtime().tm_mday
     today = datetime.date(datetime(year=year, month=month, day=day))
     week = week_list[today.isoweekday() % 7]
-    # 获取在一起的日子的日期格式
-    love_year = int(config["love_date"].split("-")[0])
-    love_month = int(config["love_date"].split("-")[1])
-    love_day = int(config["love_date"].split("-")[2])
-    love_date = date(love_year, love_month, love_day)
-    # 获取在一起的日期差
-    love_days = str(today.__sub__(love_date)).split(" ")[0]
     # 获取所有生日数据
     birthdays = {}
     for k, v in config.items():
@@ -159,10 +143,6 @@ def send_message(to_user, access_token, region_name, weather, temp, wind_dir):
                 "value": wind_dir,
                 "color": get_color()
             },
-            "love_day": {
-                "value": love_days,
-                "color": get_color()
-            }
         }
     }
     for key, value in birthdays.items():
@@ -171,7 +151,7 @@ def send_message(to_user, access_token, region_name, weather, temp, wind_dir):
         if birth_day == 0:
             birthday_data = "今天{}生日哦，祝{}生日快乐！".format(value["name"], value["name"])
         else:
-            birthday_data = "".format(value["name"], birth_day)
+            birthday_data = format(value["name"], birth_day)
         # 将生日数据插入data
         data["data"][key] = {"value": birthday_data, "color": get_color()}
     headers = {
@@ -190,8 +170,9 @@ def send_message(to_user, access_token, region_name, weather, temp, wind_dir):
         print("推送消息成功")
     else:
         print(response)
- 
- 
+
+
+
 if __name__ == "__main__":
     try:
         with open("config.txt", encoding="utf-8") as f:
@@ -213,6 +194,9 @@ if __name__ == "__main__":
     region = config["region"]
     weather, temp, wind_dir = get_weather(region)
     # 公众号推送消息
+
     for user in users:
         send_message(user, accessToken, region, weather, temp, wind_dir)
     os.system("pause")
+
+
