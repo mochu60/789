@@ -153,7 +153,7 @@ def send_message(to_user, access_token, region_name, weather, temp,wind_dir ):
         else:
             birthday_data = "{}的生日还有{}天".format(value["name"], birth_day)
         # 将生日数据插入data
-            birthday_data = "{}的生日还有{}天".format(value["name"], birth_day)
+            birthday_data = "距离{}的生日还有{}天".format(value["name"], birth_day)
     headers = {
         'Content-Type': 'application/json',
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
