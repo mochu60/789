@@ -104,7 +104,7 @@ def get_birthday(birthday, year, today):
 
  
  
-def send_message(to_user, access_token, region_name, weather, temp, wind_dir):
+def send_message(to_user, access_token, region_name, weather, temp ):
     url = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token={}".format(access_token)
     week_list = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"]
     year = localtime().tm_year
@@ -148,6 +148,7 @@ def send_message(to_user, access_token, region_name, weather, temp, wind_dir):
     for key, value in birthdays.items():
         # 获取距离下次生日的时间
         birth_day = get_birthday(value["birthday"], year, today)
+        print(f"生日数据: {key}, 距离生日还有: {birth_day}")  # 新增打印语句用于调试
         if birth_day == 0:
             birthday_data = "今天{}生日哦，祝{}生日快乐！".format(value["name"], value["name"])
         else:
@@ -170,8 +171,9 @@ def send_message(to_user, access_token, region_name, weather, temp, wind_dir):
         print("推送消息成功")
     else:
         print(response)
- 
- 
+
+
+
 if __name__ == "__main__":
     try:
         with open("config.txt", encoding="utf-8") as f:
@@ -193,6 +195,9 @@ if __name__ == "__main__":
     region = config["region"]
     weather, temp, wind_dir = get_weather(region)
     # 公众号推送消息
+
     for user in users:
-        send_message(user, accessToken, region, weather, temp, wind_dir)
+        send_message(user, accessToken, region, weather, temp, wind_dir,)
     os.system("pause")
+
+
